@@ -1,0 +1,28 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+data/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Generated files
+*.log
+*.log.err
+evaluation/results.json
+
+# Docker
+.docker/
