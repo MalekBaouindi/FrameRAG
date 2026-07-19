@@ -18,8 +18,8 @@ SYSTEM_PROMPT = (
 
 
 def embed_query(text: str, request: Request) -> tuple[list, tuple | None]:
-    embedder = get_embedder(request.app)
-    sparse_embedder = get_sparse_embedder(request.app)
+    embedder = get_embedder()
+    sparse_embedder = get_sparse_embedder()
 
     dense = list(embedder.embed([text]))[0].tolist()
 
@@ -56,7 +56,7 @@ async def query(question: Question, request: Request):
     if not results:
         return Answer(answer="No relevant documents found.", sources=[], query=question.query)
 
-    reranker = get_reranker(request.app)
+    reranker = get_reranker()
     results = maybe_rerank(question.query, results, reranker, top_k)
 
     context_parts = []
