@@ -14,6 +14,10 @@ User → Streamlit UI → FastAPI → Qdrant (hybrid search)
 - **`/query/graph`** — Entity-relationship search via Neo4j (components, concepts, integrations)
 - **`/query/agents`** — Multi-agent orchestration (supervisor routes to vector/graph/comparison specialists)
 
+## Live Demo
+
+👉 **[https://framerag-frontend.onrender.com](https://framerag-frontend.onrender.com)**
+
 ## Quick Start
 
 ### Prerequisites
