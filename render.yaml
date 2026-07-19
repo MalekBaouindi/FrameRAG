@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: framerag-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: QDRANT_HOST
+        value: 30f1e570-84c0-4d2b-896b-affbc7c34445.us-west-2-0.aws.cloud.qdrant.io
+      - key: QDRANT_PORT
+        value: "6333"
+      - key: QDRANT_HTTPS
+        value: "true"
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: QDRANT_COLLECTION
+        value: langchain-latest
+      - key: NEO4J_URI
+        value: neo4j+s://f3debee7.databases.neo4j.io
+      - key: NEO4J_USER
+        value: f3debee7
+      - key: NEO4J_PASSWORD
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+
+  - type: web
+    name: framerag-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    envVars:
+      - key: API_BASE
+        fromService:
+          name: framerag-backend
+          type: web
+          property: url

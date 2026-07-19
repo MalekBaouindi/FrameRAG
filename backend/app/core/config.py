@@ -7,6 +7,8 @@ class Settings(BaseSettings):
 
     qdrant_host: str = "localhost"
     qdrant_port: int = 6333
+    qdrant_api_key: str | None = None
+    qdrant_https: bool = False
     qdrant_collection: str = "langchain-latest"
 
     neo4j_uri: str = "bolt://localhost:7687"

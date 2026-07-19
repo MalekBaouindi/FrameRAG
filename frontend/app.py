@@ -1,9 +1,10 @@
 """FrameworkRAG — Streamlit frontend"""
+import os
 import streamlit as st
 import requests
 import json
 
-API_BASE = "http://localhost:8000"
+API_BASE = os.getenv("API_BASE", "http://localhost:8000")
 
 st.set_page_config(
     page_title="FrameworkRAG",
