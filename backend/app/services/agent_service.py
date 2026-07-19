@@ -63,20 +63,31 @@ def supervisor_node(state: AgentState, client: OpenAI) -> dict:
 def vector_agent_node(state: AgentState, embedder, sparse_embedder) -> dict:
     query = state["query"]
     dense = list(embedder.embed([query]))[0].tolist()
-    sp = list(sparse_embedder.embed([query]))[0]
-    indices = sp.indices if hasattr(sp, "indices") else sp[0]
-    values = sp.values if hasattr(sp, "values") else sp[1]
+    if sparse_embedder:
+        sp = list(sparse_embedder.embed([query]))[0]
+        indices = sp.indices if hasattr(sp, "indices") else sp[0]
+        values = sp.values if hasattr(sp, "values") else sp[1]
+        sparse = (indices, values)
+    else:
+        sparse = None
 
     collections = ["langchain-latest", "llamaindex-latest", "haystack-latest"]
     all_results = []
     for coll in collections:
         try:
-            results = qdrant_service.hybrid_search(
-                collection_name=coll,
-                dense_vector=dense,
-                sparse_vector=(indices, values),
-                limit=5,
-            )
+            if sparse:
+                results = qdrant_service.hybrid_search(
+                    collection_name=coll,
+                    dense_vector=dense,
+                    sparse_vector=sparse,
+                    limit=5,
+                )
+            else:
+                results = qdrant_service.search(
+                    collection_name=coll,
+                    query_vector=dense,
+                    limit=5,
+                )
             for r in results:
                 r.payload["collection"] = coll
             all_results.extend(results)
@@ -114,20 +125,31 @@ def graph_agent_node(state: AgentState) -> dict:
 def comparison_agent_node(state: AgentState, embedder, sparse_embedder) -> dict:
     query = state["query"]
     dense = list(embedder.embed([query]))[0].tolist()
-    sp = list(sparse_embedder.embed([query]))[0]
-    indices = sp.indices if hasattr(sp, "indices") else sp[0]
-    values = sp.values if hasattr(sp, "values") else sp[1]
+    if sparse_embedder:
+        sp = list(sparse_embedder.embed([query]))[0]
+        indices = sp.indices if hasattr(sp, "indices") else sp[0]
+        values = sp.values if hasattr(sp, "values") else sp[1]
+        sparse = (indices, values)
+    else:
+        sparse = None
 
     collections = ["langchain-latest", "llamaindex-latest", "haystack-latest"]
     per_framework = {}
     for coll in collections:
         try:
-            results = qdrant_service.hybrid_search(
-                collection_name=coll,
-                dense_vector=dense,
-                sparse_vector=(indices, values),
-                limit=5,
-            )
+            if sparse:
+                results = qdrant_service.hybrid_search(
+                    collection_name=coll,
+                    dense_vector=dense,
+                    sparse_vector=sparse,
+                    limit=5,
+                )
+            else:
+                results = qdrant_service.search(
+                    collection_name=coll,
+                    query_vector=dense,
+                    limit=5,
+                )
             per_framework[coll] = results
         except Exception:
             per_framework[coll] = []

@@ -23,10 +23,13 @@ def embed_query(text: str, request: Request) -> tuple[list, tuple | None]:
 
     dense = list(embedder.embed([text]))[0].tolist()
 
-    sp = list(sparse_embedder.embed([text]))[0]
-    indices = sp.indices if hasattr(sp, "indices") else sp[0]
-    values = sp.values if hasattr(sp, "values") else sp[1]
-    sparse = (indices, values)
+    if sparse_embedder:
+        sp = list(sparse_embedder.embed([text]))[0]
+        indices = sp.indices if hasattr(sp, "indices") else sp[0]
+        values = sp.values if hasattr(sp, "values") else sp[1]
+        sparse = (indices, values)
+    else:
+        sparse = None
 
     return dense, sparse
 
@@ -46,12 +49,19 @@ async def query(question: Question, request: Request):
     top_k = question.top_k or settings.top_k
     dense_vec, sparse_vec = embed_query(question.query, request)
 
-    results = qdrant_service.hybrid_search(
-        collection_name=settings.qdrant_collection,
-        dense_vector=dense_vec,
-        sparse_vector=sparse_vec,
-        limit=top_k,
-    )
+    if sparse_vec:
+        results = qdrant_service.hybrid_search(
+            collection_name=settings.qdrant_collection,
+            dense_vector=dense_vec,
+            sparse_vector=sparse_vec,
+            limit=top_k,
+        )
+    else:
+        results = qdrant_service.search(
+            collection_name=settings.qdrant_collection,
+            query_vector=dense_vec,
+            limit=top_k,
+        )
 
     if not results:
         return Answer(answer="No relevant documents found.", sources=[], query=question.query)

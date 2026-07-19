@@ -17,6 +17,8 @@ def get_embedder():
 
 
 def get_sparse_embedder():
+    if not settings.enable_sparse:
+        return None
     global _sparse_embedder
     if _sparse_embedder is None:
         print("Loading sparse embedding model (first request)...")
@@ -27,6 +29,8 @@ def get_sparse_embedder():
 
 
 def get_reranker():
+    if not settings.enable_reranker:
+        return None
     global _reranker
     if _reranker is None:
         try:

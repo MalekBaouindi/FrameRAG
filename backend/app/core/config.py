@@ -25,7 +25,9 @@ class Settings(BaseSettings):
 
     embedding_model: str = "BAAI/bge-small-en-v1.5"
     sparse_model: str = "prithivida/Splade_PP_en_v1"
+    enable_sparse: bool = True
     rerank_model: str = "mixedbread-ai/mxbai-rerank-xsmall-v1"
+    enable_reranker: bool = True
     top_k: int = 5
 
     class Config:
