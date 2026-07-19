@@ -73,12 +73,12 @@ class QdrantService:
         limit: int = 5,
         query_filter: dict | None = None,
     ):
-        return self.client.search(
+        return self.client.query_points(
             collection_name=collection_name,
-            query_vector=query_vector,
+            query=query_vector,
             limit=limit,
             query_filter=query_filter,
-        )
+        ).points
 
     def hybrid_search(
         self,
