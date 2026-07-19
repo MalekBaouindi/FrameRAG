@@ -24,7 +24,7 @@ EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 SPARSE_MODEL = "prithivida/Splade_PP_en_v1"
 
 
-def generate_dense(chunks: list[dict], batch_size: int = 100) -> list[np.ndarray]:
+def generate_dense(chunks: list[dict], batch_size: int = 8) -> list[np.ndarray]:
     model = TextEmbedding(model_name=EMBEDDING_MODEL)
     texts = [chunk["content"] for chunk in chunks]
     all_embeddings = []
@@ -37,7 +37,7 @@ def generate_dense(chunks: list[dict], batch_size: int = 100) -> list[np.ndarray
     return all_embeddings
 
 
-def generate_sparse(chunks: list[dict], batch_size: int = 100) -> list[tuple[np.ndarray, np.ndarray]]:
+def generate_sparse(chunks: list[dict], batch_size: int = 8) -> list[tuple[np.ndarray, np.ndarray]]:
     model = SparseTextEmbedding(model_name=SPARSE_MODEL)
     texts = [chunk["content"] for chunk in chunks]
     all_sparse = []
