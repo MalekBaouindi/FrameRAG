@@ -31,8 +31,13 @@ services:
     runtime: docker
     dockerfilePath: ./frontend/Dockerfile
     envVars:
-      - key: API_BASE
+      - key: API_HOST
         fromService:
           name: framerag-backend
           type: web
-          property: url
+          property: host
+      - key: API_PORT
+        fromService:
+          name: framerag-backend
+          type: web
+          property: port

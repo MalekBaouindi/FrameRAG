@@ -4,7 +4,7 @@ import streamlit as st
 import requests
 import json
 
-API_BASE = os.getenv("API_BASE", "http://localhost:8000")
+API_BASE = os.getenv("API_BASE") or f"http://{os.getenv('API_HOST', 'localhost')}:{os.getenv('API_PORT', '8000')}"
 
 st.set_page_config(
     page_title="FrameworkRAG",

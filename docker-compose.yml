@@ -54,6 +54,8 @@ services:
       - "8501:8501"
     environment:
       - API_BASE=http://backend:8000
+      - API_HOST=backend
+      - API_PORT=8000
     depends_on:
       - backend
     restart: unless-stopped
